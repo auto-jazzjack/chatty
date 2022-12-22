@@ -1,0 +1,36 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.4.0'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+}
+
+group = 'io.ranslor'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    compileOnly("ch.qos.logback:logback-classic")
+    // https://mvnrepository.com/artifact/io.netty/netty-all
+    implementation("io.netty:netty-all:4.1.51.Final")
+
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    dependencies {
+        compileOnly('org.projectlombok:lombok:1.18.12')
+        annotationProcessor('org.projectlombok:lombok:1.18.12')
+
+        testCompileOnly 'org.projectlombok:lombok:1.18.12'
+        testAnnotationProcessor('org.projectlombok:lombok:1.18.12')
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
