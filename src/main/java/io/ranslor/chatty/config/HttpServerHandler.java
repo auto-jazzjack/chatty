@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 public class HttpServerHandler extends ChannelInboundHandlerAdapter {
 
     private final RoomService roomService;
+    private static final String ROOMID = "ROOM-ID";
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -25,7 +26,12 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
             HttpHeaders headers = msg1.headers();
             if (headers.get(HttpHeaderNames.CONNECTION).equalsIgnoreCase("UPGRADE") &&
                     headers.get(HttpHeaderNames.UPGRADE).equalsIgnoreCase("WebSocket")) {
-                ctx.channel().pipeline().replace(this, "websocketHandler", new WebSocketHandler(roomService));
+
+                String s = headers.get(ROOMID);
+
+                ctx.channel().pipeline()
+                        .replace(this, "websocketHandler", new WebSocketHandler(roomService, s));
+                roomService.getChannelGroup(s).add(ctx.channel());
 
                 handleHandshake(ctx, msg1);
             }
